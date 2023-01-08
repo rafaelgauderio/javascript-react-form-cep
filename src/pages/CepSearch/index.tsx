@@ -8,7 +8,10 @@ import axios from 'axios';
 // essa API retorna
 type Address = {
   logradouro: string;
+  bairro: string;
   localidade: string;
+  uf: string;
+  
 }
 
 type FormData = {
@@ -69,6 +72,8 @@ const CepSearch = () => {
           <>
             <ResultCard title="Logradouro" description={address.logradouro} />
             <ResultCard title="Localidade" description={address.localidade} />
+            <ResultCard title="Estado" description={address.uf} />
+            <ResultCard title="Bairro" description={address.bairro} />
           </>
         }
       </div>
