@@ -2,21 +2,38 @@ import './styles.css';
 
 import ResultCard from 'components/ResultCard';
 import { useState } from 'react';
+import axios from 'axios';
+
+// Para integrar o front-End com uma API, faz-se necessário verificar o tipo de dados que 
+// essa API retorna
+type Address = {
+  logradouro: string;
+  localidade: string;
+}
+
+type FormData = {
+  cep: string;
+}
 
 const CepSearch = () => {
 
-  type FormData = {
-    cep: string;
-    teste: string;
-  }
-   const [formData, setFormData] = useState<FormData> ({
-      cep: '',
-      teste: ''
-   });
+  // senão definir nada no useState inicial, vai começar como undefined
+  const [address, setAddress] = useState<Address>( );
+
+  const [formData, setFormData] = useState<FormData>({
+    cep: ''
+  });
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // evita que o formulario seja enviado da forma padrão
-    console.log(formData);
+    //console.log(formData);
+    axios.get(`https://viacep.com.br/ws/${formData.cep}/json`)
+      .then((resposta) => {
+        setAddress(resposta.data);
+      })
+      .catch((erro) => {
+        setAddress(undefined);
+      });
   }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,7 +42,7 @@ const CepSearch = () => {
     const inputValue = event.target.value;
 
     // spread operator para aproveitar o que já foi digitado
-    setFormData({...formData, [inputName]:inputValue })
+    setFormData({ ...formData, [inputName]: inputValue })
 
   }
 
@@ -43,23 +60,17 @@ const CepSearch = () => {
               placeholder="CEP (informe somente números)"
               onChange={handleChange}
             />
-            <input
-              type="text"
-              name="teste"
-              value={formData.teste}
-              className="search-input"
-              placeholder="Teste"
-              onChange={handleChange}
-            />
             <button type="submit" className="btn btn-primary search-button">
               Buscar
             </button>
           </div>
         </form>
-
-        <ResultCard title="Logradouro" description="Lalala" />
-        <ResultCard title="Número" description="234" />
-
+        {address &&
+          <>
+            <ResultCard title="Logradouro" description={address.logradouro} />
+            <ResultCard title="Localidade" description={address.localidade} />
+          </>
+        }
       </div>
     </div>
   );
