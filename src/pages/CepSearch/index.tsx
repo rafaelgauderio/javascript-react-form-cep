@@ -3,6 +3,11 @@ import './styles.css';
 import ResultCard from 'components/ResultCard';
 
 const CepSearch = () => {
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      console.log("Teste de mudança de conteúdo para: " + event.target.value);
+  }
+
   return (
     <div className="cep-search-container">
       <h1 className="text-primary">Busca CEP</h1>
@@ -12,8 +17,8 @@ const CepSearch = () => {
             <input
               type="text"
               className="search-input"
-              placeholder="CEP (somente números)"
-              onChange={() => {}}
+              placeholder="CEP (informe somente números)"
+              onChange={handleChange}
             />
             <button type="submit" className="btn btn-primary search-button">
               Buscar
